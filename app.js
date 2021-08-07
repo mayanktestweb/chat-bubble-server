@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 const io = require('socket.io')(server, {
     cors: {
         origin: '*',
-        methods: '&'
+        methods: '*'
     }
 });
 const cors = require("cors");
@@ -16,6 +16,8 @@ const cors = require("cors");
 const authRouter = require('./routes/authRouter')
 const usersRouter = require('./routes/usersRouter');
 const User = require('./models/User');
+const fs = require('fs')
+
 
 mongoose.connect(`${process.env.DB_URL}`)
 
@@ -26,6 +28,14 @@ app.use(express.json())
 const db = mongoose.connection
 db.on('error', () => console.log('failed to connect to database'))
 db.once('open', () => console.log('database connected'))
+
+// create public folder
+var dir = './public';
+
+if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+}
+
 
 app.use(express.static('public'))
 app.get('/', (req, res) => {
