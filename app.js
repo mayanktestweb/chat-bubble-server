@@ -58,6 +58,10 @@ io.on('connection', socket => {
         console.log(usersIds)
         socket.emit('receive_users', usersIds)
     })
+
+    socket.on("send_message", message => {
+        socket.to(usersOnline.get(message.receiver).id).emit('receive_message', message)
+    })
 })
 
 app.get("/usersOnline", (req, res) => {
