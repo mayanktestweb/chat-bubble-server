@@ -15,6 +15,19 @@ const upload = multer({ storage })
 
 router.use(auth)
 
+
+router.get("/:userId", async (req, res) => {
+    try {
+        let user = await User.findById(req.params.userId)
+        user = user.toObject()
+        delete user.password
+        res.status(200).send(user)
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('something went wrong')
+    }
+})
+
 router.patch('/:userId', upload.single('image'), async (req, res) => {
     try {
         await User.findByIdAndUpdate(req.params.userId, { image: req.file.filename, bio: req.body.bio })
